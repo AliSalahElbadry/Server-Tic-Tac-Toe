@@ -1,0 +1,5 @@
+
+.mainFxmlClass {
+    -fx-background-image:url('photos/background.jpg');
+    -fx-background-size:750px 480px;
+}

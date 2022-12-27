@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.net.URL?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.shape.Rectangle?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane id="AnchorPane" fx:id="mainServerScreenId" prefHeight="480.0" prefWidth="750.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1">
+    <stylesheets>
+        <URL value="@mainscreen.css" />
+    </stylesheets>
+   <children>
+      <ImageView fitHeight="480.0" fitWidth="750.0" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@Photos/background.jpg" />
+         </image>
+      </ImageView>
+      <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#2a47ad" height="268.0" layoutX="209.5" layoutY="126.0" stroke="#2a47ad" strokeType="INSIDE" styleClass="corner" width="331.0" />
+      <ImageView fitHeight="152.0" fitWidth="397.0" layoutX="185.0" layoutY="50.0" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@Photos/logo.png" />
+         </image>
+      </ImageView>
+      <ImageView fitHeight="60.0" fitWidth="221.0" layoutX="272.0" layoutY="190.0" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@Photos/buttonbackground.png" />
+         </image>
+      </ImageView>
+      <Button fx:id="startServerButton" layoutX="272.0" layoutY="194.0" mnemonicParsing="false" prefHeight="48.0" prefWidth="210.0" styleClass="backGroundButton" text="Start Server" textFill="#2a47ad" textOverrun="CLIP">
+         <font>
+            <Font name="Serif Regular" size="29.0" />
+         </font>
+      </Button>
+      <ImageView fitHeight="60.0" fitWidth="221.0" layoutX="272.0" layoutY="252.0" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@Photos/buttonbackground.png" />
+         </image>
+      </ImageView>
+      <Button fx:id="showPlayersButton" layoutX="272.0" layoutY="252.0" mnemonicParsing="false" prefHeight="48.0" prefWidth="210.0" styleClass="backGroundButton" text="Show Players" textFill="#2a47ad" textOverrun="CLIP">
+         <font>
+            <Font name="Serif Regular" size="29.0" />
+         </font>
+      </Button>
+   </children>
+</AnchorPane>

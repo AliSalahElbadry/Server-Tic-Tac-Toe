@@ -1,0 +1,28 @@
+
+
+.mainFxmlClass {
+    -fx-background-image:url('photos/background.jpg');
+    -fx-background-size:750px 480px;
+}
+
+.TextCorner{
+    -fx-arc-height: 90 ;
+    -fx-arc-width:90 ;
+}
+
+.ListViewBackground{
+    -fx-background-color: #2a47ad;
+    
+}
+
+.boardCorner{
+    -fx-arc-height: 30 ;
+    -fx-arc-width: 30 ;
+}
+
+.backButton{
+    -fx-background-image:url('photos/back.png');
+    -fx-background-size:100% 100%;
+    -fx-background-color: transparent;
+}
+

@@ -1,0 +1,20 @@
+
+.mainFxmlClass {
+    -fx-background-image:url('photos/background.jpg');
+    -fx-background-size:750px 480px;
+}
+
+.corner{
+    -fx-arc-height: 30 ;
+    -fx-arc-width:30 ;
+}
+
+.backGroundButton{
+    -fx-content-display: center;
+    -fx-background-size:100% 100%;
+    -fx-background-color:transparent;
+}
+
+.backGroundButton:pressed{
+-fx-background-color: #938a26;
+}

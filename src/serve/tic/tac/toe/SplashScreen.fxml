@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+
+<AnchorPane id="AnchorPane" fx:id="splashScreenId" prefHeight="480.0" prefWidth="750.0" xmlns="http://javafx.com/javafx/8.0.171" xmlns:fx="http://javafx.com/fxml/1">
+   <children>
+      <ImageView fitHeight="480.0" fitWidth="750.0" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@Photos/background.jpg" />
+         </image>
+      </ImageView>
+      <ImageView fx:id="logoId" fitHeight="203.0" fitWidth="583.0" layoutX="83.5" layoutY="138.5" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@Photos/logo.png" />
+         </image></ImageView>
+   </children>
+</AnchorPane>
