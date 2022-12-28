@@ -4,7 +4,6 @@ import java.net.URL;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -132,23 +131,66 @@ public class PlayersScreenBase extends AnchorPane {
         text2.setFont(new Font("Serif Regular", 25.0));
 
         onlineListView.setLayoutX(117.0);
-        onlineListView.setLayoutY(109.0);
+        onlineListView.setLayoutY(114.0);
         onlineListView.setPrefHeight(253.0);
         onlineListView.setPrefWidth(240.0);
-        onlineListView.setStyle("-fx-padding: 0px");
-        onlineListView.getStyleClass().add("ListViewBackground");
+        onlineListView.getStyleClass().add("mylistview");
         
         PlayerNameItemBase playerNameItemBase = new PlayerNameItemBase();
         playerNameItemBase.playerNameId.setText("Fatma Hassan");
         
+        PlayerNameItemBase playerNameItemBase1 = new PlayerNameItemBase();
+        playerNameItemBase1.playerNameId.setText("Fatma Hassan");
+        
+        PlayerNameItemBase playerNameItemBase2 = new PlayerNameItemBase();
+        playerNameItemBase2.playerNameId.setText("Fatma Hassan");
+        
+        PlayerNameItemBase playerNameItemBase3 = new PlayerNameItemBase();
+        playerNameItemBase3.playerNameId.setText("Fatma Hassan");
+        
+        PlayerNameItemBase playerNameItemBase4 = new PlayerNameItemBase();
+        playerNameItemBase4.playerNameId.setText("Fatma Hassan");
+        
+        PlayerNameItemBase playerNameItemBase5 = new PlayerNameItemBase();
+        playerNameItemBase5.playerNameId.setText("Fatma Hassan");
+        
         onlineListView.getItems().add(playerNameItemBase);
+        onlineListView.getItems().add(playerNameItemBase1);
+        onlineListView.getItems().add(playerNameItemBase2);
+        onlineListView.getItems().add(playerNameItemBase3);
+        onlineListView.getItems().add(playerNameItemBase4);
+        onlineListView.getItems().add(playerNameItemBase5);
 
         offlineListView.setLayoutX(409.0);
         offlineListView.setLayoutY(114.0);
         offlineListView.setPrefHeight(253.0);
         offlineListView.setPrefWidth(240.0);
-        offlineListView.getStyleClass().add("ListViewBackground");
+        offlineListView.getStyleClass().add("mylistview");
+                
+        PlayerNameItemBase playerNameItemBase6 = new PlayerNameItemBase();
+        playerNameItemBase6.playerNameId.setText("Fatma Hassan");
         
+        PlayerNameItemBase playerNameItemBase7 = new PlayerNameItemBase();
+        playerNameItemBase7.playerNameId.setText("Fatma Hassan");
+        
+        PlayerNameItemBase playerNameItemBase8 = new PlayerNameItemBase();
+        playerNameItemBase8.playerNameId.setText("Fatma Hassan");
+        
+        PlayerNameItemBase playerNameItemBase9 = new PlayerNameItemBase();
+        playerNameItemBase9.playerNameId.setText("Fatma Hassan");
+        
+        PlayerNameItemBase playerNameItemBase10 = new PlayerNameItemBase();
+        playerNameItemBase10.playerNameId.setText("Fatma Hassan");
+        
+        PlayerNameItemBase playerNameItemBase11 = new PlayerNameItemBase();
+        playerNameItemBase11.playerNameId.setText("Fatma Hassan");
+        
+        offlineListView.getItems().add(playerNameItemBase6);
+        offlineListView.getItems().add(playerNameItemBase7);
+        offlineListView.getItems().add(playerNameItemBase8);
+        offlineListView.getItems().add(playerNameItemBase9);
+        offlineListView.getItems().add(playerNameItemBase10);
+        offlineListView.getItems().add(playerNameItemBase11);
 
         backButtonId.setFitHeight(70.0);
         backButtonId.setFitWidth(70.0);
@@ -157,8 +199,8 @@ public class PlayersScreenBase extends AnchorPane {
         backButtonId.setPickOnBounds(true);
         backButtonId.setPreserveRatio(true);
         backButtonId.setImage(new Image(getClass().getResource("Photos/back.png").toExternalForm()));
-
-         backButtonId.setOnMousePressed((event)->{
+        
+        backButtonId.setOnMousePressed((event)->{
                 
            
 
@@ -171,7 +213,9 @@ public class PlayersScreenBase extends AnchorPane {
                         
                     
                 });
-        
+         
+         
+
         getChildren().add(imageView);
         getChildren().add(rectangle);
         getChildren().add(rectangle0);
