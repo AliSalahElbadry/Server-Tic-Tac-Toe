@@ -116,16 +116,12 @@ public class MainScreenBase extends AnchorPane {
         showPlayersButton.setFont(new Font("Serif Regular", 29.0));
         showPlayersButton.setOnAction((event)->{
                 
-           
-
                         Parent root = new PlayersScreenBase();
                         Scene scene = new Scene(root, 750, 480);
                        
                         Stage stage = (Stage) ((Node)event.getSource()).getScene().getWindow();
                         stage.setScene(scene);
-                        
-                        
-                    
+
                 });
 
         getChildren().add(imageView);
