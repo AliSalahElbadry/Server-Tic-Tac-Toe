@@ -14,6 +14,7 @@ public class ServeTicTacToe extends Application {
     @Override
     public void start(Stage primaryStage) {
         
+        primaryStage.setResizable(false);
         Parent root = new SplashScreenBase();
         Scene scene = new Scene(root, 750, 480);
         
