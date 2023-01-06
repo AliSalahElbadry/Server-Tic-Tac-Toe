@@ -31,13 +31,13 @@ public class MessageHandler extends Thread{
         while(true){
             try {
                 if(recive!=null){
-                    message=recive.readLine();
+                   message=recive.readUTF();
                     System.err.println(message);
                 }
             } catch (Exception ex) {
+                  this.stop();
                   Server.myClients.remove(this);
-                  this.stop();//here set status offline
-                System.out.print(ex.getMessage());
+                  System.out.print(ex.getMessage());
             }
         }
     }

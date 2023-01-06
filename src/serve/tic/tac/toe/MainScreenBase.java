@@ -1,5 +1,8 @@
 package serve.tic.tac.toe;
 
+import java.io.IOException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javafx.application.Platform;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
@@ -16,7 +19,7 @@ import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 
 public class MainScreenBase extends AnchorPane {
-
+    Server ourServer;
     protected final ImageView imageView;
     protected final Rectangle rectangle;
     protected final ImageView imageView0;
@@ -87,10 +90,20 @@ public class MainScreenBase extends AnchorPane {
             
             if(startServerButton.getText().equals("Start Server") ){
                 
+                ourServer=new Server();
+                ourServer.start();
                 startServerButton.setText("Stop Server");
                 
             }else{
-            
+                Server.myClients=null;
+                Server.operations.database.close();
+                try {
+                    ourServer.serverSocket.close();
+                } catch (IOException ex) {
+                    Logger.getLogger(MainScreenBase.class.getName()).log(Level.SEVERE, null, ex);
+                }
+                ourServer.stop();
+                ourServer=null;
                 startServerButton.setText("Start Server");
                 
             }
