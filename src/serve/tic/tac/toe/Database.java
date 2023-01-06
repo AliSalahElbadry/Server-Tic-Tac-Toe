@@ -4,6 +4,7 @@ package serve.tic.tac.toe;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.logging.Level;
 import org.apache.derby.jdbc.ClientDriver;
@@ -22,6 +23,26 @@ public class Database {
         } catch (SQLException ex) {
            ex.printStackTrace();
         }
+    }
+    public ResultSet executeSelect(String query)
+    {
+        ResultSet setData=null;
+        try {
+             setData=con.prepareStatement(query).executeQuery();
+        } catch (SQLException ex) {
+             ex.printStackTrace();
+        }
+        return setData;
+    }
+    
+    public void close(){
+    
+        try {
+            con.close();
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+        }
+    
     }
     
 }
