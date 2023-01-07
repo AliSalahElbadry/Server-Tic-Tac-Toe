@@ -37,17 +37,18 @@ public class DatabaseOperations {
        boolean result=true;
        String[]allData=comingData.split(",");
        //check user if exists
-       ResultSet check_exists=database.executeSelect("select * from PLAYERS where EMAIL="+allData[1]);
+       ResultSet check_exists=database.executeSelect("select * from PLAYERS where EMAIL='"+allData[2]+"'");
        try {
            if(check_exists.next())
            {
                result=false;
            }
-      
+
        if(result){
            //get raws count
            check_exists=database.executeSelect("select count(*) from PLAYERS");
-           
+           check_exists.next();
+           database.insertPlayer(check_exists.getInt(1)+1,allData[1],allData[2],allData[3]);
            
       // result=database.ExecuteUpdate("INSERT INTO PLAYERS VALUES ("+(Integer.valueOf(check_exists.getInt(0))+1)+allData[0]+","+allData[1]+","+allData[2]+","+"true,0,0)");
        }

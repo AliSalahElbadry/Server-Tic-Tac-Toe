@@ -51,7 +51,22 @@ public class Database {
        
        
    }
-   
+    public int insertPlayer(int playerId,String username,String email,String password){
+        int res=-1;
+        try {
+            PreparedStatement  statement=con.prepareStatement("insert into ROOT.PLAYERS (PLAYER_ID,USER_NAME,EMAIL,PASSWORD,STATUS) values (?,?,?,?,?)");
+            statement.setInt(1,playerId);
+            statement.setString(2, username);
+            statement.setString(3, email);
+            statement.setString(4, password);
+            statement.setBoolean(5, true);
+            res=statement.executeUpdate();
+            
+        } catch (SQLException ex) {
+            Logger.getLogger(Database.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return res;
+    }
     
     public void close(){
     
@@ -62,5 +77,6 @@ public class Database {
         }
     
     }
+    
     
 }
