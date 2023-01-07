@@ -9,7 +9,8 @@ import java.net.Socket;
 public class MessageHandler extends Thread{
     public DataInputStream recive;
     public DataOutputStream send;
-
+   
+    public int clientID=-1;
     Socket socket;
     String message;
     
@@ -19,6 +20,7 @@ public class MessageHandler extends Thread{
             socket=s;
             recive=new DataInputStream(socket.getInputStream());
             send=new DataOutputStream(socket.getOutputStream());
+            
             start();
         }catch(Exception e)
         {
@@ -30,11 +32,31 @@ public class MessageHandler extends Thread{
         super.run(); 
         while(true){
             try {
+                
                 if(recive!=null){
                    message=recive.readUTF();
-                    System.err.println(message);
+                  
+                   String check[]=message.split(",");
+                   if(check[0].equals("login"))
+                   {
+                     String dbResult=Server.operations.logInCheck(message);
+                      
+                     if(dbResult.length()>6)
+                     {
+                         clientID=Integer.valueOf(dbResult.split(",")[1]);
+                         Server.operations.database.changePlayerStatus(clientID, true);
+                     
+                     }
+                     send.writeUTF(dbResult); 
+                   }
+                   else if(check[0]=="signUp")
+                   {
+                       Server.operations.SignUp(message);
+                   }
+                    
                 }
             } catch (Exception ex) {
+                Server.operations.database.changePlayerStatus(clientID, false);
                   this.stop();
                   Server.myClients.remove(this);
                   System.out.print(ex.getMessage());

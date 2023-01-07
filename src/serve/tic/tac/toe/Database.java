@@ -6,7 +6,9 @@ import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.logging.Level;
+import java.util.logging.Logger;
 import org.apache.derby.jdbc.ClientDriver;
 
 
@@ -34,6 +36,22 @@ public class Database {
         }
         return setData;
     }
+    
+    public void changePlayerStatus(int playerID,boolean status)
+   {
+        try {
+           PreparedStatement  statement=con.prepareStatement("update ROOT.PLAYERS set STATUS=? where PLAYER_ID=?");
+           statement.setBoolean(1, status);
+           statement.setInt(2, playerID);
+           statement.executeUpdate();
+            
+        } catch (SQLException ex) {
+           ex.printStackTrace();
+        }
+       
+       
+   }
+   
     
     public void close(){
     
