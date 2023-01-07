@@ -41,4 +41,19 @@ public class Server extends Thread{
             }
         }
     }
+    public void close()
+    {
+        try 
+        {
+            operations.database.close();
+            myClients.forEach((MessageHandler myClient) -> {
+                myClient.stop();
+            });
+            
+            this.serverSocket.close();
+            this.stop();
+        } catch (IOException ex) {
+            Logger.getLogger(Server.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
 }

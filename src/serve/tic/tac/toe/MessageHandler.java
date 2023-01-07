@@ -25,7 +25,7 @@ public class MessageHandler extends Thread {
                 
                 if(recive!=null){
                    message=recive.readUTF();
-                    
+                    System.out.println(message); 
                    String check[]=message.split(",");
                    if("Move".equals(check[0]))
                    {
@@ -72,9 +72,13 @@ public class MessageHandler extends Thread {
                      }
                      send.writeUTF(dbResult); 
                    }
-                   else if(check[0]=="signUp")
+                   else if(check[0].equals("signUp"))
                    {
-                       Server.operations.SignUp(message);
+                       boolean result=Server.operations.SignUp(message);
+                       String repleyMessage="signUp,"+String.valueOf(result);
+                       System.out.println(repleyMessage+"////////////////////////");
+                       send.writeUTF(repleyMessage);
+                       
                    }
                     
 
