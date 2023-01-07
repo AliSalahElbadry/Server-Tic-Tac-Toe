@@ -7,11 +7,12 @@ import java.net.Socket;
 
 
 public class MessageHandler extends Thread{
-    public DataInputStream recive;
-    public DataOutputStream send;
-
-    Socket socket;
-    String message;
+    public int clintID=-1;
+    private DataInputStream recive;
+    private DataOutputStream send;
+    
+    private Socket socket;
+    private String message;
     
     public MessageHandler(Socket s){
         try{
@@ -33,6 +34,20 @@ public class MessageHandler extends Thread{
                 if(recive!=null){
                    message=recive.readUTF();
                     System.err.println(message);
+                   if("Move".equals(message.split(",")[0]))
+                   {
+                       String[]words=message.split(",");
+                       for (MessageHandler player :Server.myClients) {
+                           
+                           if(player.clintID==Integer.valueOf(words[1]))
+                           {
+                               message=words[0]+","+words[2];
+                               player.send.writeUTF(message);
+                               System.err.println(message);
+                           }
+                           
+                       }
+                   }
                 }
             } catch (Exception ex) {
                   this.stop();
@@ -40,6 +55,6 @@ public class MessageHandler extends Thread{
                   System.out.print(ex.getMessage());
             }
         }
+       
     }
-    
 }

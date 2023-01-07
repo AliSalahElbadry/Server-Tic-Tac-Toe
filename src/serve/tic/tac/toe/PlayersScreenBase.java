@@ -1,6 +1,10 @@
 package serve.tic.tac.toe;
 
 import java.net.URL;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
@@ -24,8 +28,8 @@ public class PlayersScreenBase extends AnchorPane {
     protected final Rectangle rectangle2;
     protected final Text text1;
     protected final Text text2;
-    protected final ListView onlineListView;
-    protected final ListView offlineListView;
+    protected final  ListView onlineListView;
+    protected final  ListView offlineListView;
     protected final ImageView backButtonId;
 
     public PlayersScreenBase() {
@@ -136,62 +140,14 @@ public class PlayersScreenBase extends AnchorPane {
         onlineListView.setPrefWidth(240.0);
         onlineListView.getStyleClass().add("mylistview");
         
-        PlayerNameItemBase playerNameItemBase = new PlayerNameItemBase();
-        playerNameItemBase.playerNameId.setText("Fatma Hassan");
-        
-        PlayerNameItemBase playerNameItemBase1 = new PlayerNameItemBase();
-        playerNameItemBase1.playerNameId.setText("Fatma Hassan");
-        
-        PlayerNameItemBase playerNameItemBase2 = new PlayerNameItemBase();
-        playerNameItemBase2.playerNameId.setText("Fatma Hassan");
-        
-        PlayerNameItemBase playerNameItemBase3 = new PlayerNameItemBase();
-        playerNameItemBase3.playerNameId.setText("Fatma Hassan");
-        
-        PlayerNameItemBase playerNameItemBase4 = new PlayerNameItemBase();
-        playerNameItemBase4.playerNameId.setText("Fatma Hassan");
-        
-        PlayerNameItemBase playerNameItemBase5 = new PlayerNameItemBase();
-        playerNameItemBase5.playerNameId.setText("Fatma Hassan");
-        
-        onlineListView.getItems().add(playerNameItemBase);
-        onlineListView.getItems().add(playerNameItemBase1);
-        onlineListView.getItems().add(playerNameItemBase2);
-        onlineListView.getItems().add(playerNameItemBase3);
-        onlineListView.getItems().add(playerNameItemBase4);
-        onlineListView.getItems().add(playerNameItemBase5);
-
         offlineListView.setLayoutX(409.0);
         offlineListView.setLayoutY(114.0);
         offlineListView.setPrefHeight(253.0);
         offlineListView.setPrefWidth(240.0);
         offlineListView.getStyleClass().add("mylistview");
-                
-        PlayerNameItemBase playerNameItemBase6 = new PlayerNameItemBase();
-        playerNameItemBase6.playerNameId.setText("Fatma Hassan");
         
-        PlayerNameItemBase playerNameItemBase7 = new PlayerNameItemBase();
-        playerNameItemBase7.playerNameId.setText("Fatma Hassan");
+        PrepareScreen();
         
-        PlayerNameItemBase playerNameItemBase8 = new PlayerNameItemBase();
-        playerNameItemBase8.playerNameId.setText("Fatma Hassan");
-        
-        PlayerNameItemBase playerNameItemBase9 = new PlayerNameItemBase();
-        playerNameItemBase9.playerNameId.setText("Fatma Hassan");
-        
-        PlayerNameItemBase playerNameItemBase10 = new PlayerNameItemBase();
-        playerNameItemBase10.playerNameId.setText("Fatma Hassan");
-        
-        PlayerNameItemBase playerNameItemBase11 = new PlayerNameItemBase();
-        playerNameItemBase11.playerNameId.setText("Fatma Hassan");
-        
-        offlineListView.getItems().add(playerNameItemBase6);
-        offlineListView.getItems().add(playerNameItemBase7);
-        offlineListView.getItems().add(playerNameItemBase8);
-        offlineListView.getItems().add(playerNameItemBase9);
-        offlineListView.getItems().add(playerNameItemBase10);
-        offlineListView.getItems().add(playerNameItemBase11);
-
         backButtonId.setFitHeight(70.0);
         backButtonId.setFitWidth(70.0);
         backButtonId.setLayoutX(14.0);
@@ -229,5 +185,56 @@ public class PlayersScreenBase extends AnchorPane {
         getChildren().add(offlineListView);
         getChildren().add(backButtonId);
 
+    }
+    private void PrepareScreen()
+    {
+        String query="";
+        ResultSet Ides;
+        onlineListView.getItems().clear();
+        offlineListView.getItems().clear();
+        if(Server.myClients.size()!=0){
+            query="SELECT PLAYER_ID FROM PLAYERS WHERE PLAYER_ID NOT IN (";
+            for (MessageHandler clientOnline : Server.myClients) {
+                if(clientOnline.clintID!=-1){
+                    setItemOnList(""+clientOnline.clintID, 1);
+                    query+=""+clientOnline.clintID;
+                    query+=",";
+                }
+            }
+            query=query.substring(0,query.length()-1);
+            query+=")";
+            Ides=Server.operations.database.executeSelect(query);
+            try {
+                while(Ides.next())
+                {
+                    setItemOnList(""+Ides.getInt("PLAYER_ID"), 0);
+                }
+            } catch (SQLException ex) {
+                Logger.getLogger(PlayersScreenBase.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }else{
+            Ides=Server.operations.database.executeSelect("SELECT PLAYER_ID FROM PLAYERS");
+            try {
+                while(Ides.next())
+                {
+                    setItemOnList(""+Ides.getInt("PLAYER_ID"), 0);
+                }
+            } catch (SQLException ex) {
+                Logger.getLogger(PlayersScreenBase.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            
+        }
+    }
+    private void setItemOnList(String ID,int list)
+    {
+        PlayerNameItemBase item=new PlayerNameItemBase();
+        item.playerNameId.setText(ID);
+        if(list==0)
+        {
+            offlineListView.getItems().add(item);
+        }else if(list==1)
+        {
+            onlineListView.getItems().add(item);
+        }
     }
 }
