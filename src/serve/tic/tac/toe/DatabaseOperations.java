@@ -59,8 +59,5 @@ public class DatabaseOperations {
        String stat=status?"true":"false";
      //  database.ExecuteUpdate("update PLAYERS set STATUS ="+stat+" where PLAYER_ID="+id);
    }
-   public void getAvilablePlayers()
-   {
-       
-   }
+   
 }
