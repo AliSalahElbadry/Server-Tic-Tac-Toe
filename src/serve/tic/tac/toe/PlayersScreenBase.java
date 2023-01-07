@@ -195,9 +195,9 @@ public class PlayersScreenBase extends AnchorPane {
         if(Server.myClients.size()!=0){
             query="SELECT PLAYER_ID FROM PLAYERS WHERE PLAYER_ID NOT IN (";
             for (MessageHandler clientOnline : Server.myClients) {
-                if(clientOnline.clintID!=-1){
-                    setItemOnList(""+clientOnline.clintID, 1);
-                    query+=""+clientOnline.clintID;
+                if(clientOnline.clientID!=-1){
+                    setItemOnList(""+clientOnline.clientID, 1);
+                    query+=""+clientOnline.clientID;
                     query+=",";
                 }
             }

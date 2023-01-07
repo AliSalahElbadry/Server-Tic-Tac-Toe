@@ -17,18 +17,19 @@ public class DatabaseOperations {
    public String logInCheck(String comingData)
    {
       String[]allData=comingData.split(",");
-      String res="";
-      ResultSet data=database.executeSelect("select * from ROOT.PLAYERS where Email="+allData[1]+" and password="+allData[2]);
+      String res="login,";
+      ResultSet data=database.executeSelect("select * from ROOT.PLAYERS where Email='"+allData[1]+"' and password='"+allData[2]+"'");
        try {
            while(data.next())
            {
-               res+=data.getInt("PLAYER_ID")+","+data.getInt("USER_Name")+","+
-                    data.getInt("EMAIL")+","+data.getInt("PASSWORD")+","+data.getInt("STATUS")+","+
+               res+=data.getInt("PLAYER_ID")+","+data.getString("USER_Name")+","+
+                    data.getString("EMAIL")+","+data.getString("PASSWORD")+","+data.getBoolean("STATUS")+","+
                     data.getInt("WINS")+","+data.getInt("COUNTGAMES");
            }
        } catch (SQLException ex) {
-           Logger.getLogger(DatabaseOperations.class.getName()).log(Level.SEVERE, null, ex);
+           ex.printStackTrace();
        }
+       System.out.println("From database :"+res);
        return res;
    }
    public boolean SignUp(String comingData)//data comes as one string with , splitter
@@ -59,8 +60,5 @@ public class DatabaseOperations {
        String stat=status?"true":"false";
      //  database.ExecuteUpdate("update PLAYERS set STATUS ="+stat+" where PLAYER_ID="+id);
    }
-   public void getAvilablePlayers()
-   {
-       
-   }
+  
 }
