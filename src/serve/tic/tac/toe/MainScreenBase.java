@@ -19,7 +19,8 @@ import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 
 public class MainScreenBase extends AnchorPane {
-    Server ourServer;
+    public static Server ourServer;
+    public static boolean isRunning=false;
     protected final ImageView imageView;
     protected final Rectangle rectangle;
     protected final ImageView imageView0;
@@ -83,6 +84,13 @@ public class MainScreenBase extends AnchorPane {
         startServerButton.setPrefWidth(210.0);
         startServerButton.getStyleClass().add("backGroundButton");
         startServerButton.setText("Start Server");
+        if(isRunning)
+        {
+            startServerButton.setText("Stop Server");
+        }else
+        {
+            startServerButton.setText("Start Server");
+        }
         startServerButton.setTextFill(javafx.scene.paint.Color.valueOf("#2a47ad"));
         startServerButton.setTextOverrun(javafx.scene.control.OverrunStyle.CLIP);
         startServerButton.setFont(new Font("Serif Regular", 29.0));
@@ -90,7 +98,7 @@ public class MainScreenBase extends AnchorPane {
             
             if(startServerButton.getText().equals("Start Server") ){
                 
-                ourServer=new Server();
+                ourServer=new Server();isRunning=true;
                 ourServer.start();
                 startServerButton.setText("Stop Server");
                 
@@ -99,13 +107,13 @@ public class MainScreenBase extends AnchorPane {
                 Server.operations.database.close();
                 try {
                     ourServer.serverSocket.close();
-                } catch (IOException ex) {
+                } catch (Exception ex) {
                     Logger.getLogger(MainScreenBase.class.getName()).log(Level.SEVERE, null, ex);
                 }
                 ourServer.stop();
                 ourServer=null;
                 startServerButton.setText("Start Server");
-                
+                isRunning=false;
             }
         });
 

@@ -192,47 +192,34 @@ public class PlayersScreenBase extends AnchorPane {
         ResultSet Ides;
         onlineListView.getItems().clear();
         offlineListView.getItems().clear();
-        if(Server.myClients.size()!=0){
-            query="SELECT PLAYER_ID FROM PLAYERS WHERE PLAYER_ID NOT IN (";
-            for (MessageHandler clientOnline : Server.myClients) {
-                if(clientOnline.clientID!=-1){
-                    setItemOnList(""+clientOnline.clientID, 1);
-                    query+=""+clientOnline.clientID;
-                    query+=",";
-                }
-            }
-            query=query.substring(0,query.length()-1);
-            query+=")";
-            Ides=Server.operations.database.executeSelect(query);
+        
+            Ides=Server.operations.database.executeSelect("SELECT USER_NAME FROM PLAYERS WHERE STATUS=TRUE");
             try {
                 while(Ides.next())
                 {
-                    setItemOnList(""+Ides.getInt("PLAYER_ID"), 0);
+                    setItemOnList(""+Ides.getString("PLAYER_NAME"), 1);
                 }
             } catch (SQLException ex) {
                 Logger.getLogger(PlayersScreenBase.class.getName()).log(Level.SEVERE, null, ex);
             }
-        }else{
-            Ides=Server.operations.database.executeSelect("SELECT PLAYER_ID FROM PLAYERS");
+             Ides=Server.operations.database.executeSelect("SELECT USER_NAME FROM PLAYERS WHERE STATUS=FALSE");
             try {
                 while(Ides.next())
                 {
-                    setItemOnList(""+Ides.getInt("PLAYER_ID"), 0);
+                    setItemOnList(""+Ides.getString("PLAYER_NAME"), 0);
                 }
             } catch (SQLException ex) {
                 Logger.getLogger(PlayersScreenBase.class.getName()).log(Level.SEVERE, null, ex);
             }
-            
-        }
     }
     private void setItemOnList(String ID,int list)
     {
         PlayerNameItemBase item=new PlayerNameItemBase();
         item.playerNameId.setText(ID);
-        if(list==0)
+        if(list==0)//offline
         {
             offlineListView.getItems().add(item);
-        }else if(list==1)
+        }else if(list==1)//online
         {
             onlineListView.getItems().add(item);
         }
