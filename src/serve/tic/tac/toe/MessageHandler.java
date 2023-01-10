@@ -22,21 +22,32 @@ public class MessageHandler extends Thread {
             socket=s;
             recive=new DataInputStream(socket.getInputStream());
             send=new DataOutputStream(socket.getOutputStream());
+            start();
+            } catch (Exception ex) {
                 
-                if(recive!=null){
+                  System.out.print(ex.getMessage());
+
+            }
+    }
+
+    @Override
+    public void run() {
+        try{
+        while (true)
+        {
+            if(recive!=null){
                    message=recive.readUTF();
-                    System.out.println(message); 
                    String check[]=message.split(",");
                    if("Move".equals(check[0]))
                    {
-                       String[]words=message.split(",");
                        for (MessageHandler player :Server.myClients) {
                            
-                           if(player.clientID==Integer.valueOf(words[1]))
+                           if(player.clientID==Integer.valueOf(check[1]))
                            {
-                               message=words[0]+","+words[2];
-                               player.send.writeUTF(message);
+                               message=check[0]+","+check[2];
                                System.err.println(message);
+                               player.send.writeUTF(message);
+                               break;
                            }
                            
                        }
@@ -58,8 +69,6 @@ public class MessageHandler extends Thread {
                         send.writeUTF(messageAvaliable);
 
                     }
-
-                  
                    else if(check[0].equals("login"))
                    {
                      String dbResult=Server.operations.logInCheck(message);
@@ -79,16 +88,35 @@ public class MessageHandler extends Thread {
                        System.out.println(repleyMessage+"////////////////////////");
                        send.writeUTF(repleyMessage);
                        
+                   }else if(check[0].equals("wins"))
+                   {
+                       Server.operations.database.setPGamesWins(1, clientID,Integer.valueOf(check[1]));
+                   }else if(check[0].equals("PGames"))
+                   {
+                       Server.operations.database.setPGamesWins(2, clientID,Integer.valueOf(check[1]));
+                   }else if(check[0].equals("endGame"))
+                   {
+                       for(MessageHandler client:Server.myClients){
+                       
+                           if(client.clientID==Integer.valueOf(check[1]))
+                           {
+                               client.send.writeUTF("endGame,");
+                               break;
+                           }
+                       
+                       }
+                       
                    }
-                    
-
-                }
-            } catch (Exception ex) {
-                Server.operations.database.changePlayerStatus(clientID, false);
+        }
+        
+      }
+        }catch(Exception e)
+        {
+                  Server.operations.database.changePlayerStatus(clientID, false);
                   this.stop();
                   Server.myClients.remove(this);
-                  System.out.print(ex.getMessage());
-
-            }
-    }
+            System.out.println(e.getCause());
+        }
+   
+}
 }
