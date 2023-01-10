@@ -1,5 +1,6 @@
 package serve.tic.tac.toe;
 
+import com.sun.xml.internal.ws.resources.SenderMessages;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.net.Socket;
@@ -79,6 +80,31 @@ public class MessageHandler extends Thread {
                        System.out.println(repleyMessage+"////////////////////////");
                        send.writeUTF(repleyMessage);
                        
+                   }
+                   else if(check[0].equals("invite")){
+                       for(MessageHandler handler:Server.myClients){
+                           if(handler.clientID==Integer.valueOf(check[1])){
+                               handler.send.writeUTF(check[0]+","+clientID+","+check[2]);
+                               break;
+                           }
+                       }
+                   }
+                   else if(check[0].equals("acceptInvitation")){
+                       for(MessageHandler handler:Server.myClients){
+                           if(handler.clientID==Integer.valueOf(check[1])){
+                               handler.send.writeUTF("startGame,"+clientID);
+                               break;
+                           }
+                       }
+                       send.writeUTF("startGame,"+check[1]);
+                   }
+                   else if(check[0].equals("rejectInvitation")){
+                       for(MessageHandler handler:Server.myClients){
+                           if(handler.clientID==Integer.valueOf(check[1])){
+                               handler.send.writeUTF("rejectInvitation,"+clientID);
+                               break;
+                           }
+                       }
                    }
                     
 
