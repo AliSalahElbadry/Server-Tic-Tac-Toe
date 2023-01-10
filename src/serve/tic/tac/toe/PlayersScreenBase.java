@@ -1,6 +1,5 @@
 package serve.tic.tac.toe;
 
-import java.net.URL;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.logging.Level;
@@ -157,17 +156,7 @@ public class PlayersScreenBase extends AnchorPane {
         backButtonId.setImage(new Image(getClass().getResource("Photos/back.png").toExternalForm()));
         
         backButtonId.setOnMousePressed((event)->{
-                
-           
-
-                        Parent root = new MainScreenBase();
-                        Scene scene = new Scene(root, 750, 480);
-                       
-                        Stage stage = (Stage) ((Node)event.getSource()).getScene().getWindow();
-                        stage.setScene(scene);
-                        
-                        
-                    
+               ServeTicTacToe.scene.setRoot(new MainScreenBase());
                 });
          
          
@@ -197,7 +186,7 @@ public class PlayersScreenBase extends AnchorPane {
             try {
                 while(Ides.next())
                 {
-                    setItemOnList(""+Ides.getString("PLAYER_NAME"), 1);
+                    setItemOnList(""+Ides.getString("USER_NAME"), 1);
                 }
             } catch (SQLException ex) {
                 Logger.getLogger(PlayersScreenBase.class.getName()).log(Level.SEVERE, null, ex);
@@ -206,7 +195,7 @@ public class PlayersScreenBase extends AnchorPane {
             try {
                 while(Ides.next())
                 {
-                    setItemOnList(""+Ides.getString("PLAYER_NAME"), 0);
+                    setItemOnList(""+Ides.getString("USER_NAME"), 0);
                 }
             } catch (SQLException ex) {
                 Logger.getLogger(PlayersScreenBase.class.getName()).log(Level.SEVERE, null, ex);
