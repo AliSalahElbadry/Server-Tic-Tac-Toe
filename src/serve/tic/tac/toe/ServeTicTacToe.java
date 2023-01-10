@@ -5,20 +5,23 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javafx.application.Application;
 import javafx.application.Platform;
-import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 
 public class ServeTicTacToe extends Application {
-    
+    public static Scene scene;
     @Override
     public void start(Stage primaryStage) {
         primaryStage.setOnCloseRequest(e->{
-        MainScreenBase.ourServer.close();
+          try{
+            MainScreenBase.ourServer.close();
+          }catch(Exception ex){
+              System.out.println(ex.getCause());
+          }
         });
         primaryStage.setResizable(false);
-        Parent root = new SplashScreenBase();
-        Scene scene = new Scene(root, 750, 480);
+        
+         scene = new Scene(new SplashScreenBase(), 730, 470);
         
         primaryStage.setTitle("Tic Tac Toe");
         primaryStage.setScene(scene);
@@ -36,15 +39,7 @@ public class ServeTicTacToe extends Application {
                 Platform.runLater(new Runnable() {
                     @Override
                     public void run() {
-
-                        Parent root = new MainScreenBase();
-                        Scene scene = new Scene(root, 750, 480);
-
-                        primaryStage.setScene(scene);
-                        primaryStage.show();  
-                        
-                       
-                        
+                        ServeTicTacToe.scene.setRoot(new MainScreenBase());              
                     }
                 });
                  
