@@ -14,7 +14,8 @@ public class ServeTicTacToe extends Application {
     public void start(Stage primaryStage) {
         primaryStage.setOnCloseRequest(e->{
           try{
-            MainScreenBase.ourServer.close();
+             if(MainScreenBase.ourServer!=null)
+                MainScreenBase.ourServer.close();
           }catch(Exception ex){
               System.out.println(ex.getCause());
           }
@@ -46,7 +47,7 @@ public class ServeTicTacToe extends Application {
             }
         }).start();
       
-        
+ 
     }
     
     public static void main(String[] args) {
