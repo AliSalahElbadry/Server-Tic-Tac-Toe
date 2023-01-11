@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package serve.tic.tac.toe;
 
 import java.io.IOException;
@@ -17,7 +12,7 @@ public class Server extends Thread{
     ServerSocket serverSocket;
     public static volatile DatabaseOperations operations;
     public static volatile Vector<MessageHandler>myClients=new Vector<MessageHandler>();
-    
+    public static boolean isRunning=false;
     public Server(){
           operations=new DatabaseOperations();
         try {
@@ -33,6 +28,7 @@ public class Server extends Thread{
      
         while(true)
         {
+            if(Server.isRunning==false)break;
             try {
                Socket socket=serverSocket.accept();
                Server.myClients.add( new MessageHandler(socket));//here set status true
@@ -46,9 +42,7 @@ public class Server extends Thread{
         try 
         {
             operations.database.close();
-            myClients.forEach((MessageHandler myClient) -> {
-                myClient.stop();
-            });
+            myClients.forEach(Thread::stop);
             
             this.serverSocket.close();
             this.stop();

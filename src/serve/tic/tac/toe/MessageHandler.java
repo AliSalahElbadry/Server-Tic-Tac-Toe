@@ -55,7 +55,7 @@ public class MessageHandler extends Thread {
                         resultSet = Server.operations.database.executeSelect("Select * from ROOT.PLAYERS where STATUS = true");
 
                         while (resultSet.next()) {
-
+                            if(resultSet.getInt(1)!=clientID)
                             messageAvaliable += resultSet.getInt(1) + "," + resultSet.getString(2) + ",";
 
                         }
@@ -122,7 +122,22 @@ public class MessageHandler extends Thread {
                                break;
                            }
                        }
+                   }else if(check[0].equals("playing"))
+                   {
+                      for(MessageHandler handler:Server.myClients)
+                      {
+                          if(handler.clientID==Integer.valueOf(check[1]))
+                          {
+                              handler.send.writeUTF("playing,"+clientID);
+                              break;
+                          }
+                      }
                    }
+                    
+                }
+                if(Server.isRunning==false){
+                    Server.operations.database.changePlayerStatus(clientID, false);
+                break;
                 }
             }
         }
