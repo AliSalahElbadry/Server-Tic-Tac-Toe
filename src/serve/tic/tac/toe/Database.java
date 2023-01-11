@@ -1,4 +1,3 @@
-
 package serve.tic.tac.toe;
 
 import java.sql.Connection;
@@ -22,7 +21,7 @@ public class Database {
             DriverManager.registerDriver(new ClientDriver());
             con=DriverManager.getConnection("jdbc:derby://localhost:1527/Tic-Tac-Toe", "root","root");
            
-        } catch (SQLException ex) {
+        } catch (Exception ex) {
            ex.printStackTrace();
         }
     }
@@ -31,7 +30,7 @@ public class Database {
         ResultSet setData=null;
         try {
              setData=con.prepareStatement(query).executeQuery();
-        } catch (SQLException ex) {
+        } catch (Exception ex) {
              ex.printStackTrace();
         }
         return setData;
@@ -45,7 +44,7 @@ public class Database {
            statement.setInt(2, playerID);
            statement.executeUpdate();
             
-        } catch (SQLException ex) {
+        } catch (Exception ex) {
            ex.printStackTrace();
         }
        
@@ -62,17 +61,36 @@ public class Database {
             statement.setBoolean(5, true);
             res=statement.executeUpdate();
             
-        } catch (SQLException ex) {
+        } catch (Exception ex) {
             Logger.getLogger(Database.class.getName()).log(Level.SEVERE, null, ex);
         }
         return res;
     }
+    public void setPGamesWins(int mode,int Id,int value)//0 means pgames , 1 means wins
+    {
+       String query=""; 
+       if(mode==0)
+       {
+           query="Update Players set COUNTGAMES=? where PLAYER_ID=?";
+       }else if(mode==1)
+       {
+           query="Update Players set WINS=? where PLAYER_ID=?";
+       }
+        try {
+            statement=con.prepareStatement(query);
+            statement.setInt(1, value);
+            statement.setInt(2, Id);
+            statement.executeUpdate();
+        } catch (Exception ex) {
+            Logger.getLogger(Database.class.getName()).log(Level.SEVERE, null, ex);
+        }
+   }
     
     public void close(){
     
         try {
             con.close();
-        } catch (SQLException ex) {
+        } catch (Exception ex) {
             ex.printStackTrace();
         }
     

@@ -1,6 +1,5 @@
 package serve.tic.tac.toe;
 
-import java.net.URL;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.logging.Level;
@@ -35,7 +34,7 @@ public class PlayersScreenBase extends AnchorPane {
     protected final ImageView chart;
     public static int onlineCount = 0;
     public static int offlineCount = 0;
-     protected final Text chartText;
+    protected final Text chartText;
 
     public PlayersScreenBase() {
         onlineCount = 0;
@@ -163,17 +162,10 @@ public class PlayersScreenBase extends AnchorPane {
         backButtonId.setPickOnBounds(true);
         backButtonId.setPreserveRatio(true);
         backButtonId.setImage(new Image(getClass().getResource("Photos/back.png").toExternalForm()));
-
         backButtonId.setOnMousePressed((event) -> {
-
-            Parent root = new MainScreenBase();
-            Scene scene = new Scene(root, 750, 480);
-
-            Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-            stage.setScene(scene);
-
+            ServeTicTacToe.scene.setRoot(new MainScreenBase());
         });
-        
+
         chart.setFitHeight(70.0);
         chart.setFitWidth(70.0);
         chart.setLayoutX(14.0);
@@ -183,29 +175,19 @@ public class PlayersScreenBase extends AnchorPane {
         chart.setImage(new Image(getClass().getResource("Photos/barchart.jpeg").toExternalForm()));
 
         chart.setOnMousePressed((event) -> {
-
-            Parent root = new ServerGraphBase();
-            Scene scene = new Scene(root, 750, 480);
-
-            Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-            stage.setScene(scene);
+            ServeTicTacToe.scene.setRoot(new ServerGraphBase());
 
         });
-        
-         chartText.setFill(javafx.scene.paint.Color.WHITE);
+
+        chartText.setFill(javafx.scene.paint.Color.WHITE);
         chartText.setLayoutX(5.0);
         chartText.setLayoutY(100.0);
         chartText.setStrokeType(javafx.scene.shape.StrokeType.OUTSIDE);
         chartText.setStrokeWidth(0.0);
         chartText.setText("Show Graph");
-        chartText.setFont(Font.font("Serif Regular",FontWeight.BOLD, 15.0));
+        chartText.setFont(Font.font("Serif Regular", FontWeight.BOLD, 15.0));
         chartText.setOnMousePressed((event) -> {
-
-            Parent root = new ServerGraphBase();
-            Scene scene = new Scene(root, 750, 480);
-
-            Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-            stage.setScene(scene);
+            ServeTicTacToe.scene.setRoot(new ServerGraphBase());
 
         });
 
@@ -221,8 +203,8 @@ public class PlayersScreenBase extends AnchorPane {
         getChildren().add(onlineListView);
         getChildren().add(offlineListView);
         getChildren().add(backButtonId);
-         getChildren().add(chart);
-           getChildren().add(chartText);
+        getChildren().add(chart);
+        getChildren().add(chartText);
 
     }
 

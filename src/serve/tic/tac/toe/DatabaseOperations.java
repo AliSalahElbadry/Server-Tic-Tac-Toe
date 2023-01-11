@@ -1,4 +1,3 @@
-
 package serve.tic.tac.toe;
 
 import java.sql.ResultSet;
@@ -61,5 +60,5 @@ public class DatabaseOperations {
        String stat=status?"true":"false";
      //  database.ExecuteUpdate("update PLAYERS set STATUS ="+stat+" where PLAYER_ID="+id);
    }
-
+ 
 }

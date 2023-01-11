@@ -1,26 +1,18 @@
 package serve.tic.tac.toe;
 
-import java.io.IOException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import javafx.application.Platform;
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Node;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
+
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
+import javafx.scene.control.ButtonType;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Font;
-import javafx.stage.Modality;
-import javafx.stage.Stage;
-import javafx.stage.StageStyle;
 
 public class MainScreenBase extends AnchorPane {
     public static Server ourServer;
-    public static boolean isRunning=false;
+   // public static boolean isRunning=false;
     protected final ImageView imageView;
     protected final Rectangle rectangle;
     protected final ImageView imageView0;
@@ -84,7 +76,7 @@ public class MainScreenBase extends AnchorPane {
         startServerButton.setPrefWidth(210.0);
         startServerButton.getStyleClass().add("backGroundButton");
         startServerButton.setText("Start Server");
-        if(isRunning)
+        if(Server.isRunning)
         {
             startServerButton.setText("Stop Server");
         }else
@@ -98,22 +90,16 @@ public class MainScreenBase extends AnchorPane {
             
             if(startServerButton.getText().equals("Start Server") ){
                 
-                ourServer=new Server();isRunning=true;
+                ourServer=new Server();
                 ourServer.start();
                 startServerButton.setText("Stop Server");
-                
+                Server.isRunning=true;
             }else{
-                Server.myClients=null;
-                Server.operations.database.close();
-                try {
-                    ourServer.serverSocket.close();
-                } catch (Exception ex) {
-                    Logger.getLogger(MainScreenBase.class.getName()).log(Level.SEVERE, null, ex);
-                }
-                ourServer.stop();
+                Server.isRunning=false;
+               ourServer.close();
                 ourServer=null;
                 startServerButton.setText("Start Server");
-                isRunning=false;
+                
             }
         });
 
@@ -136,12 +122,13 @@ public class MainScreenBase extends AnchorPane {
         showPlayersButton.setTextOverrun(javafx.scene.control.OverrunStyle.CLIP);
         showPlayersButton.setFont(new Font("Serif Regular", 29.0));
         showPlayersButton.setOnAction((event)->{
-                
-                        Parent root = new PlayersScreenBase();
-                        Scene scene = new Scene(root, 750, 480);
-                       
-                        Stage stage = (Stage) ((Node)event.getSource()).getScene().getWindow();
-                        stage.setScene(scene);
+                   if(Server.isRunning)
+                       ServeTicTacToe.scene.setRoot(new PlayersScreenBase());
+                   else{
+                       Alert alert=new Alert(Alert.AlertType.ERROR,"Error",ButtonType.OK);
+                       alert.setContentText("Server Is Not Running !!\n Start Server First");
+                       alert.show();
+                   }
 
                 });
 

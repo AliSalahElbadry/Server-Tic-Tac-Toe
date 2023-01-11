@@ -66,7 +66,6 @@ public class ServerGraphBase extends AnchorPane {
         barChart.setPrefWidth(412.0);
         barChart.setStyle("-fx-background-color: #ffffff;");
         barChart.setTitle("Statistics of Players");
-        //set first bar color
 
         backButtonId.setFitHeight(70.0);
         backButtonId.setFitWidth(70.0);
@@ -77,14 +76,10 @@ public class ServerGraphBase extends AnchorPane {
         backButtonId.setImage(new Image(getClass().getResource("Photos/back.png").toExternalForm()));
         backButtonId.setOnMousePressed((event) -> {
 
-            Parent root = new PlayersScreenBase();
-            Scene scene = new Scene(root, 750, 480);
-
-            Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-            stage.setScene(scene);
+             ServeTicTacToe.scene.setRoot(new PlayersScreenBase());
 
         });
-
+        System.out.println(PlayersScreenBase.offlineCount+"    "+PlayersScreenBase.onlineCount);
         imageView0.setFitHeight(113.0);
         imageView0.setFitWidth(357.0);
         imageView0.setLayoutX(220.0);
