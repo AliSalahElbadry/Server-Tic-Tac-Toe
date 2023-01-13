@@ -5,6 +5,7 @@ import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.SQLNonTransientConnectionException;
 import java.sql.Statement;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -21,7 +22,7 @@ public class Database {
             DriverManager.registerDriver(new ClientDriver());
             con=DriverManager.getConnection("jdbc:derby://localhost:1527/Tic-Tac-Toe", "root","root");
            
-        } catch (Exception ex) {
+        } catch (SQLException ex) {
            ex.printStackTrace();
         }
     }
@@ -30,7 +31,7 @@ public class Database {
         ResultSet setData=null;
         try {
              setData=con.prepareStatement(query).executeQuery();
-        } catch (Exception ex) {
+        } catch (SQLException ex) {
              ex.printStackTrace();
         }
         return setData;
@@ -39,13 +40,13 @@ public class Database {
     public void changePlayerStatus(int playerID,boolean status)
    {
         try {
-           PreparedStatement  statement=con.prepareStatement("update ROOT.PLAYERS set STATUS=? where PLAYER_ID=?");
+           statement=con.prepareStatement("update ROOT.PLAYERS set STATUS=? where PLAYER_ID=?");
            statement.setBoolean(1, status);
            statement.setInt(2, playerID);
            statement.executeUpdate();
             
-        } catch (Exception ex) {
-           ex.printStackTrace();
+        } catch (SQLException ex) {
+            System.out.println(ex.getMessage());
         }
        
        
@@ -61,12 +62,13 @@ public class Database {
             statement.setBoolean(5, true);
             res=statement.executeUpdate();
             
-        } catch (Exception ex) {
+        } catch (SQLException ex) {
             Logger.getLogger(Database.class.getName()).log(Level.SEVERE, null, ex);
         }
         return res;
     }
-    public void setPGamesWins(int mode,int Id,int value)//0 means pgames , 1 means wins
+    public void setPGamesWins(int mode,int Id,int value)throws SQLNonTransientConnectionException
+//0 means pgames , 1 means wins
     {
        String query=""; 
        if(mode==0)
@@ -81,8 +83,10 @@ public class Database {
             statement.setInt(1, value);
             statement.setInt(2, Id);
             statement.executeUpdate();
-        } catch (Exception ex) {
-            Logger.getLogger(Database.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (SQLNonTransientConnectionException ex) {
+            System.out.println(ex.getMessage());
+        } catch (SQLException ex) {
+          System.out.println(ex.getMessage());
         }
    }
     
@@ -90,7 +94,7 @@ public class Database {
     
         try {
             con.close();
-        } catch (Exception ex) {
+        } catch (SQLException ex) {
             ex.printStackTrace();
         }
     
