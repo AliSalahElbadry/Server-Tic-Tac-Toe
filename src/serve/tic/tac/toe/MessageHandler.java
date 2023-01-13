@@ -3,24 +3,25 @@ package serve.tic.tac.toe;
 
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
+import java.io.IOException;
 import java.net.Socket;
 import java.sql.ResultSet;
+import java.sql.SQLNonTransientConnectionException;
 
 public class MessageHandler extends Thread {
 
     private DataInputStream recive;
     private DataOutputStream send;
-    ResultSet resultSet;
-    String messageAvaliable = "Avaliable,";
-    private Socket socket;
+    public Socket socket;
     private String message;
-
+    public volatile boolean isRunning=false;
     public int clientID = -1;
-
+    public String clientName="";
+    public boolean isInAvilable=false;
     public MessageHandler(Socket s) {
         try {
             message = "";
-            socket = s;
+            socket = s;isRunning=true;
             recive = new DataInputStream(socket.getInputStream());
             send = new DataOutputStream(socket.getOutputStream());
             start();
@@ -34,7 +35,7 @@ public class MessageHandler extends Thread {
     @Override
     public void run() {
         try {
-            while (true) {
+            while (isRunning) {
                 if (recive != null) {
                     message = recive.readUTF();
                     String check[] = message.split(",");
@@ -51,9 +52,10 @@ public class MessageHandler extends Thread {
                         }
                     }
                     else if (message.equals("Avaliable")) {
-
+                        ResultSet resultSet;isInAvilable=true;
                         resultSet = Server.operations.database.executeSelect("Select * from ROOT.PLAYERS where STATUS = true");
 
+                        String messageAvaliable = "Avaliable,";
                         while (resultSet.next()) {
                             if(resultSet.getInt(1)!=clientID)
                             messageAvaliable += resultSet.getInt(1) + "," + resultSet.getString(2) + ",";
@@ -63,17 +65,33 @@ public class MessageHandler extends Thread {
                         messageAvaliable = messageAvaliable.substring(0, messageAvaliable.length() - 1);
                         System.out.println(messageAvaliable);
                         send.writeUTF(messageAvaliable);
+                        
 
+                    }else if(message.equals("closeAv"))
+                    {
+                        this.isInAvilable=false;
                     }
                     else if (check[0].equals("login")) {
                         String dbResult = Server.operations.logInCheck(message);
 
                         if (dbResult.length() > 6) {
                             clientID = Integer.valueOf(dbResult.split(",")[1]);
+                            clientName=dbResult.split(",")[2];
                             Server.operations.database.changePlayerStatus(clientID, true);
-
+                            if(Server.myClients.size()>1){
+                                for(MessageHandler handler:Server.myClients)
+                                {
+                                    if(handler!=this)
+                                    {
+                                        handler.send.writeUTF("UpdateAddAv,"+clientID+","+clientName);
+                                    }
+                                }
+                            
+                            }
                         }
                         send.writeUTF(dbResult);
+                        
+                       
                     }
                     else if (check[0].equals("signUp")) {
                         boolean result = Server.operations.SignUp(message);
@@ -86,7 +104,11 @@ public class MessageHandler extends Thread {
                         Server.operations.database.setPGamesWins(1, clientID, Integer.valueOf(check[1]));
                     }
                     else if (check[0].equals("PGames")) {
-                        Server.operations.database.setPGamesWins(2, clientID, Integer.valueOf(check[1]));
+                            try{
+                                Server.operations.database.setPGamesWins(2, clientID, Integer.valueOf(check[1]));
+                            }catch(SQLNonTransientConnectionException ex){
+                                System.out.println(ex.getMessage());
+                            }
                     }
                     else if (check[0].equals("endGame")) {
                         for (MessageHandler client : Server.myClients) {
@@ -132,20 +154,45 @@ public class MessageHandler extends Thread {
                               break;
                           }
                       }
+                   }else if(check[0].equals("Close"))
+                   {
+                        System.err.println("Clint Sends Close");
+                        isRunning=false;
+                        Server.operations.database.changePlayerStatus(clientID, false);
+                        for(MessageHandler handler:Server.myClients)
+                            {
+                                if(handler!=this)
+                                {
+                                    handler.send.writeUTF("UpdateRemAv,"+clientID+","+clientName);
+                                }
+                            }
+                        recive.close();
+                        send.close();
+                        socket.close();
+                        this.stop();
+                        Server.myClients.remove(this);
                    }
                     
                 }
                 if(Server.isRunning==false){
-                    Server.operations.database.changePlayerStatus(clientID, false);
-                break;
+                    isRunning=false;
                 }
             }
+           
         }
         catch (Exception e) {
-            Server.operations.database.changePlayerStatus(clientID, false);
-            this.stop();
-            Server.myClients.remove(this);
+            
             System.out.println(e.getCause());
+        }
+        
+        
+    }
+    public void sendMessage(String message)
+    {
+        try {
+            send.writeUTF(message);
+        } catch (IOException ex) {
+         System.out.println(ex.getMessage());
         }
     }
 }

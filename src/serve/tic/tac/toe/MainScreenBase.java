@@ -1,6 +1,9 @@
 package serve.tic.tac.toe;
 
 
+import java.io.IOException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
@@ -89,15 +92,16 @@ public class MainScreenBase extends AnchorPane {
         startServerButton.setOnAction((event)->{
             
             if(startServerButton.getText().equals("Start Server") ){
-                
+                Server.isRunning=true;
                 ourServer=new Server();
                 ourServer.start();
                 startServerButton.setText("Stop Server");
-                Server.isRunning=true;
+                
             }else{
                 Server.isRunning=false;
-               ourServer.close();
-                ourServer=null;
+                
+                ourServer.close();
+                
                 startServerButton.setText("Start Server");
                 
             }
