@@ -53,7 +53,7 @@ public class Server extends Thread{
                     Server.operations.database.changePlayerStatus(handler.clientID, false);
                     handler.socket.close();
                 } catch (SocketException ex) {
-                    System.out.println("clint closed");
+                    Logger.getLogger(Server.class.getName()).log(Level.SEVERE, null, ex);
                 } catch (IOException ex) {
                     Logger.getLogger(Server.class.getName()).log(Level.SEVERE, null, ex);
                 }

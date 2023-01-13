@@ -61,7 +61,7 @@ public class MessageHandler extends Thread {
                             messageAvaliable += resultSet.getInt(1) + "," + resultSet.getString(2) + ",";
 
                         }
-
+                        
                         messageAvaliable = messageAvaliable.substring(0, messageAvaliable.length() - 1);
                         System.out.println(messageAvaliable);
                         send.writeUTF(messageAvaliable);
@@ -123,7 +123,9 @@ public class MessageHandler extends Thread {
                    else if(check[0].equals("invite")){
                        for(MessageHandler handler:Server.myClients){
                            if(handler.clientID==Integer.valueOf(check[1])){
+                               
                                handler.send.writeUTF(check[0]+","+clientID+","+check[2]);
+                               
                                break;
                            }
                        }
@@ -171,6 +173,20 @@ public class MessageHandler extends Thread {
                         socket.close();
                         this.stop();
                         Server.myClients.remove(this);
+                   }else if(check[0].equals("Clear"))
+                   {
+                       Server.operations.database.changePlayerStatus(clientID, false);
+                      for(MessageHandler handler:Server.myClients)
+                            {
+                                if(handler!=this)
+                                {
+                                    handler.send.writeUTF("UpdateRemAv,"+clientID+","+clientName);
+                                }
+                            }
+                       
+                       clientID=-1;
+                       clientName="";
+                       
                    }
                     
                 }

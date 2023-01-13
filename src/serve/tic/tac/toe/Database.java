@@ -30,6 +30,11 @@ public class Database {
     {
         ResultSet setData=null;
         try {
+             if(con.isClosed()||con==null)
+                {
+                    DriverManager.registerDriver(new ClientDriver());
+                    con=DriverManager.getConnection("jdbc:derby://localhost:1527/Tic-Tac-Toe", "root","root");
+                }
              setData=con.prepareStatement(query).executeQuery();
         } catch (SQLException ex) {
              ex.printStackTrace();
@@ -40,6 +45,11 @@ public class Database {
     public void changePlayerStatus(int playerID,boolean status)
    {
         try {
+            if(con.isClosed()||con==null)
+            {
+                DriverManager.registerDriver(new ClientDriver());
+                con=DriverManager.getConnection("jdbc:derby://localhost:1527/Tic-Tac-Toe", "root","root");
+            }
            statement=con.prepareStatement("update ROOT.PLAYERS set STATUS=? where PLAYER_ID=?");
            statement.setBoolean(1, status);
            statement.setInt(2, playerID);
@@ -54,7 +64,12 @@ public class Database {
     public int insertPlayer(int playerId,String username,String email,String password){
         int res=-1;
         try {
-            PreparedStatement  statement=con.prepareStatement("insert into ROOT.PLAYERS (PLAYER_ID,USER_NAME,EMAIL,PASSWORD,STATUS) values (?,?,?,?,?)");
+            if(con.isClosed()||con==null)
+            {
+                DriverManager.registerDriver(new ClientDriver());
+                con=DriverManager.getConnection("jdbc:derby://localhost:1527/Tic-Tac-Toe", "root","root");
+            }
+            statement=con.prepareStatement("insert into ROOT.PLAYERS (PLAYER_ID,USER_NAME,EMAIL,PASSWORD,STATUS) values (?,?,?,?,?)");
             statement.setInt(1,playerId);
             statement.setString(2, username);
             statement.setString(3, email);
@@ -79,6 +94,11 @@ public class Database {
            query="Update Players set WINS=? where PLAYER_ID=?";
        }
         try {
+            if(con.isClosed()||con==null)
+            {
+                DriverManager.registerDriver(new ClientDriver());
+                con=DriverManager.getConnection("jdbc:derby://localhost:1527/Tic-Tac-Toe", "root","root");
+            }
             statement=con.prepareStatement(query);
             statement.setInt(1, value);
             statement.setInt(2, Id);
