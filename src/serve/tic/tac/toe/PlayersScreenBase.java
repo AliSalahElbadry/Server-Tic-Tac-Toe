@@ -13,6 +13,7 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Font;
+import javafx.scene.text.FontWeight;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 
@@ -27,12 +28,18 @@ public class PlayersScreenBase extends AnchorPane {
     protected final Rectangle rectangle2;
     protected final Text text1;
     protected final Text text2;
-    protected final  ListView onlineListView;
-    protected final  ListView offlineListView;
+    protected final ListView onlineListView;
+    protected final ListView offlineListView;
     protected final ImageView backButtonId;
+    protected final ImageView chart;
+    public static int onlineCount = 0;
+    public static int offlineCount = 0;
+    protected final Text chartText;
 
     public PlayersScreenBase() {
-
+        onlineCount = 0;
+        offlineCount = 0;
+        chart = new ImageView();
         imageView = new ImageView();
         rectangle = new Rectangle();
         rectangle0 = new Rectangle();
@@ -45,6 +52,7 @@ public class PlayersScreenBase extends AnchorPane {
         onlineListView = new ListView();
         offlineListView = new ListView();
         backButtonId = new ImageView();
+        chartText = new Text();
 
         setId("AnchorPane");
         setPrefHeight(480.0);
@@ -138,15 +146,15 @@ public class PlayersScreenBase extends AnchorPane {
         onlineListView.setPrefHeight(253.0);
         onlineListView.setPrefWidth(240.0);
         onlineListView.getStyleClass().add("mylistview");
-        
+
         offlineListView.setLayoutX(409.0);
         offlineListView.setLayoutY(114.0);
         offlineListView.setPrefHeight(253.0);
         offlineListView.setPrefWidth(240.0);
         offlineListView.getStyleClass().add("mylistview");
-        
+
         PrepareScreen();
-        
+
         backButtonId.setFitHeight(70.0);
         backButtonId.setFitWidth(70.0);
         backButtonId.setLayoutX(14.0);
@@ -154,12 +162,34 @@ public class PlayersScreenBase extends AnchorPane {
         backButtonId.setPickOnBounds(true);
         backButtonId.setPreserveRatio(true);
         backButtonId.setImage(new Image(getClass().getResource("Photos/back.png").toExternalForm()));
-        
-        backButtonId.setOnMousePressed((event)->{
-               ServeTicTacToe.scene.setRoot(new MainScreenBase());
-                });
-         
-         
+        backButtonId.setOnMousePressed((event) -> {
+            ServeTicTacToe.scene.setRoot(new MainScreenBase());
+        });
+
+        chart.setFitHeight(70.0);
+        chart.setFitWidth(70.0);
+        chart.setLayoutX(14.0);
+        chart.setLayoutY(10.0);
+        chart.setPickOnBounds(true);
+        chart.setPreserveRatio(true);
+        chart.setImage(new Image(getClass().getResource("Photos/barchart.jpeg").toExternalForm()));
+
+        chart.setOnMousePressed((event) -> {
+            ServeTicTacToe.scene.setRoot(new ServerGraphBase());
+
+        });
+
+        chartText.setFill(javafx.scene.paint.Color.WHITE);
+        chartText.setLayoutX(5.0);
+        chartText.setLayoutY(100.0);
+        chartText.setStrokeType(javafx.scene.shape.StrokeType.OUTSIDE);
+        chartText.setStrokeWidth(0.0);
+        chartText.setText("Show Graph");
+        chartText.setFont(Font.font("Serif Regular", FontWeight.BOLD, 15.0));
+        chartText.setOnMousePressed((event) -> {
+            ServeTicTacToe.scene.setRoot(new ServerGraphBase());
+
+        });
 
         getChildren().add(imageView);
         getChildren().add(rectangle);
@@ -173,42 +203,44 @@ public class PlayersScreenBase extends AnchorPane {
         getChildren().add(onlineListView);
         getChildren().add(offlineListView);
         getChildren().add(backButtonId);
+        getChildren().add(chart);
+        getChildren().add(chartText);
 
     }
-    private void PrepareScreen()
-    {
-        String query="";
+
+    private void PrepareScreen() {
+        String query = "";
         ResultSet Ides;
         onlineListView.getItems().clear();
         offlineListView.getItems().clear();
-        
-            Ides=Server.operations.database.executeSelect("SELECT USER_NAME FROM PLAYERS WHERE STATUS=TRUE");
-            try {
-                while(Ides.next())
-                {
-                    setItemOnList(""+Ides.getString("USER_NAME"), 1);
-                }
-            } catch (SQLException ex) {
-                Logger.getLogger(PlayersScreenBase.class.getName()).log(Level.SEVERE, null, ex);
+
+        Ides = Server.operations.database.executeSelect("SELECT USER_NAME FROM PLAYERS WHERE STATUS=TRUE");
+        try {
+            while (Ides.next()) {
+                setItemOnList("" + Ides.getString("USER_NAME"), 1);
+                onlineCount++;
             }
-             Ides=Server.operations.database.executeSelect("SELECT USER_NAME FROM PLAYERS WHERE STATUS=FALSE");
-            try {
-                while(Ides.next())
-                {
-                    setItemOnList(""+Ides.getString("USER_NAME"), 0);
-                }
-            } catch (SQLException ex) {
-                Logger.getLogger(PlayersScreenBase.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (SQLException ex) {
+            Logger.getLogger(PlayersScreenBase.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        Ides = Server.operations.database.executeSelect("SELECT USER_NAME FROM PLAYERS WHERE STATUS=FALSE");
+        try {
+            while (Ides.next()) {
+                setItemOnList("" + Ides.getString("USER_NAME"), 0);
+                offlineCount++;
             }
+        } catch (SQLException ex) {
+            Logger.getLogger(PlayersScreenBase.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
-    private void setItemOnList(String ID,int list)
-    {
-        PlayerNameItemBase item=new PlayerNameItemBase();
+
+    private void setItemOnList(String ID, int list) {
+        PlayerNameItemBase item = new PlayerNameItemBase();
         item.playerNameId.setText(ID);
-        if(list==0)//offline
+        if (list == 0)//offline
         {
             offlineListView.getItems().add(item);
-        }else if(list==1)//online
+        } else if (list == 1)//online
         {
             onlineListView.getItems().add(item);
         }
