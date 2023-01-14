@@ -244,6 +244,8 @@ public class PlayersScreenBase extends AnchorPane {
         {
             onlineListView.getItems().add(item);
         }
+        onlineListView.refresh();
+        offlineListView.refresh();
     }
     public static void  fromOnToOff(String name)//logout,connection lost
     {
@@ -254,6 +256,7 @@ public class PlayersScreenBase extends AnchorPane {
             {
                 offlineListView.getItems().add(onlineListView.getItems().get(i));
                 onlineListView.getItems().remove(i);
+                onlineListView.refresh();
                 break;
             }
          }
@@ -267,6 +270,7 @@ public class PlayersScreenBase extends AnchorPane {
             {
                 onlineListView.getItems().add(offlineListView.getItems().get(i));
                 offlineListView.getItems().remove(i);
+                onlineListView.refresh();
                 break;
             }
          }
@@ -277,6 +281,7 @@ public class PlayersScreenBase extends AnchorPane {
             
             offlineListView.getItems().add(object);
             onlineListView.getItems().remove(object);
+            onlineListView.refresh();
             
         }
     }

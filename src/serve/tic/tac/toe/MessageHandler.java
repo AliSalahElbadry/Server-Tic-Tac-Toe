@@ -189,9 +189,9 @@ public class MessageHandler extends Thread {
                         Server.myClients.remove(this);
                    }else if(check[0].equals("Clear"))
                    {
+                       Platform.runLater(()->{PlayersScreenBase.fromOnToOff(clientName);});
                        Server.operations.database.changePlayerStatus(clientID, false);
                        System.err.println("here");
-                       Platform.runLater(()->{PlayersScreenBase.fromOnToOff(clientName);});
                        System.err.println("There");
                       for(MessageHandler handler:Server.myClients)
                             {
