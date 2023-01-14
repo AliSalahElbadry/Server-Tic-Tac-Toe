@@ -74,7 +74,7 @@ public class Database {
             statement.setString(2, username);
             statement.setString(3, email);
             statement.setString(4, password);
-            statement.setBoolean(5, true);
+            statement.setBoolean(5, false);
             res=statement.executeUpdate();
             
         } catch (SQLException ex) {

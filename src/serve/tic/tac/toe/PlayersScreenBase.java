@@ -28,8 +28,8 @@ public class PlayersScreenBase extends AnchorPane {
     protected final Rectangle rectangle2;
     protected final Text text1;
     protected final Text text2;
-    protected final ListView onlineListView;
-    protected final ListView offlineListView;
+    protected static ListView onlineListView=new ListView();
+    protected static ListView offlineListView=new ListView();
     protected final ImageView backButtonId;
     protected final ImageView chart;
     public static int onlineCount = 0;
@@ -234,9 +234,9 @@ public class PlayersScreenBase extends AnchorPane {
         }
     }
 
-    private void setItemOnList(String ID, int list) {
+    public static void setItemOnList(String name, int list) {
         PlayerNameItemBase item = new PlayerNameItemBase();
-        item.playerNameId.setText(ID);
+        item.playerNameId.setText(name);
         if (list == 0)//offline
         {
             offlineListView.getItems().add(item);
@@ -245,4 +245,40 @@ public class PlayersScreenBase extends AnchorPane {
             onlineListView.getItems().add(item);
         }
     }
+    public static void  fromOnToOff(String name)//logout,connection lost
+    {
+         for(int i=0;i<onlineListView.getItems().size();i++)
+         {
+            String text=((PlayerNameItemBase)onlineListView.getItems().get(i)).playerNameId.getText();
+            if(text.equals(name))
+            {
+                offlineListView.getItems().add(onlineListView.getItems().get(i));
+                onlineListView.getItems().remove(i);
+                break;
+            }
+         }
+    }
+    public static void  fromOffToOn(String name)//login
+    {
+         for(int i=0;i<offlineListView.getItems().size();i++)
+         {
+            String text=((PlayerNameItemBase)offlineListView.getItems().get(i)).playerNameId.getText();
+            if(text.equals(name))
+            {
+                onlineListView.getItems().add(offlineListView.getItems().get(i));
+                offlineListView.getItems().remove(i);
+                break;
+            }
+         }
+    }
+    public static void clearOnline()//server close
+    {
+        for (Object object : onlineListView.getItems()) {
+            
+            offlineListView.getItems().add(object);
+            onlineListView.getItems().remove(object);
+            
+        }
+    }
+   
 }

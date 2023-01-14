@@ -47,6 +47,7 @@ public class Server extends Thread{
     {
         try 
         {
+            PlayersScreenBase.clearOnline();
             Server.myClients.forEach((handler) -> {
                 try {
                     handler.sendMessage("Close,");

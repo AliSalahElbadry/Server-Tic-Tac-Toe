@@ -15,7 +15,7 @@ import javafx.scene.text.Font;
 
 public class MainScreenBase extends AnchorPane {
     public static Server ourServer;
-   // public static boolean isRunning=false;
+    
     protected final ImageView imageView;
     protected final Rectangle rectangle;
     protected final ImageView imageView0;

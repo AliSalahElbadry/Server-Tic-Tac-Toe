@@ -7,6 +7,7 @@ import java.io.IOException;
 import java.net.Socket;
 import java.sql.ResultSet;
 import java.sql.SQLNonTransientConnectionException;
+import javafx.application.Platform;
 
 public class MessageHandler extends Thread {
 
@@ -18,6 +19,7 @@ public class MessageHandler extends Thread {
     public int clientID = -1;
     public String clientName="";
     public boolean isInAvilable=false;
+    public boolean isPlayingInAGame=false;
     public MessageHandler(Socket s) {
         try {
             message = "";
@@ -57,7 +59,7 @@ public class MessageHandler extends Thread {
 
                         String messageAvaliable = "Avaliable,";
                         while (resultSet.next()) {
-                            if(resultSet.getInt(1)!=clientID)
+                            if(resultSet.getInt(1)!=clientID&&!getIsInGameCheck(resultSet.getInt(1)))
                             messageAvaliable += resultSet.getInt(1) + "," + resultSet.getString(2) + ",";
 
                         }
@@ -74,9 +76,10 @@ public class MessageHandler extends Thread {
                     else if (check[0].equals("login")) {
                         String dbResult = Server.operations.logInCheck(message);
 
-                        if (dbResult.length() > 6) {
+                        if (dbResult.length() > 6) {//if less than 6 then or equal the there is no data in database
                             clientID = Integer.valueOf(dbResult.split(",")[1]);
                             clientName=dbResult.split(",")[2];
+                            Platform.runLater(()->{ PlayersScreenBase.fromOffToOn(clientName);});
                             Server.operations.database.changePlayerStatus(clientID, true);
                             if(Server.myClients.size()>1){
                                 for(MessageHandler handler:Server.myClients)
@@ -114,6 +117,7 @@ public class MessageHandler extends Thread {
                         for (MessageHandler client : Server.myClients) {
 
                             if (client.clientID == Integer.valueOf(check[1])) {
+                                
                                 client.send.writeUTF("endGame,");
                                 break;
                             }
@@ -133,11 +137,20 @@ public class MessageHandler extends Thread {
                    else if(check[0].equals("acceptInvitation")){
                        for(MessageHandler handler:Server.myClients){
                            if(handler.clientID==Integer.valueOf(check[1])){
+                               for(MessageHandler h:Server.myClients)
+                               {
+                                  if(h!=handler&&h!=this){
+                                     h.send.writeUTF("UpdateRemAv,"+handler.clientID+","+handler.clientName);
+                                     h.send.writeUTF("UpdateRemAv,"+clientID+","+clientName);
+                                  }
+                               }
+                               handler.isPlayingInAGame=true;
                                handler.send.writeUTF("startGame,"+clientID);
                                break;
                            }
                        }
-                       send.writeUTF("startGame,"+check[1]);
+                        isPlayingInAGame=true;
+                        send.writeUTF("startGame,"+check[1]);
                    }
                    else if(check[0].equals("rejectInvitation")){
                        for(MessageHandler handler:Server.myClients){
@@ -160,6 +173,7 @@ public class MessageHandler extends Thread {
                    {
                         System.err.println("Clint Sends Close");
                         isRunning=false;
+                        Platform.runLater(()->{PlayersScreenBase.fromOnToOff(clientName);});
                         Server.operations.database.changePlayerStatus(clientID, false);
                         for(MessageHandler handler:Server.myClients)
                             {
@@ -176,6 +190,9 @@ public class MessageHandler extends Thread {
                    }else if(check[0].equals("Clear"))
                    {
                        Server.operations.database.changePlayerStatus(clientID, false);
+                       System.err.println("here");
+                       Platform.runLater(()->{PlayersScreenBase.fromOnToOff(clientName);});
+                       System.err.println("There");
                       for(MessageHandler handler:Server.myClients)
                             {
                                 if(handler!=this)
@@ -187,10 +204,21 @@ public class MessageHandler extends Thread {
                        clientID=-1;
                        clientName="";
                        
+                   }else if(check[0].equals("EndGameSession"))
+                   {
+                       isPlayingInAGame=false;
+                       for(MessageHandler handler:Server.myClients)
+                        {
+                            if(handler!=this)
+                            {
+                                handler.send.writeUTF("UpdateAddAv,"+clientID+","+clientName);
+                            }
+                        }
                    }
                     
                 }
                 if(Server.isRunning==false){
+                    
                     isRunning=false;
                 }
             }
@@ -210,5 +238,18 @@ public class MessageHandler extends Thread {
         } catch (IOException ex) {
          System.out.println(ex.getMessage());
         }
+    }
+    private boolean getIsInGameCheck(int id)
+    {
+        boolean res=false;
+        for(MessageHandler handler:Server.myClients)
+        {
+            if(handler.clientID==id)
+            {
+                res=handler.isPlayingInAGame;
+                break;
+            }
+        }
+        return res;
     }
 }
