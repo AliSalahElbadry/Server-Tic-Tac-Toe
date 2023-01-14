@@ -20,7 +20,7 @@ public class ServerGraphBase extends AnchorPane {
     protected final Rectangle rectangle;
     protected final CategoryAxis categoryAxis;
     protected final NumberAxis numberAxis;
-    protected final BarChart barChart;
+    protected static BarChart barChart;
     protected final ImageView backButtonId;
     protected final ImageView imageView0;
    
@@ -88,6 +88,20 @@ public class ServerGraphBase extends AnchorPane {
         imageView0.setPreserveRatio(true);
         imageView0.setImage(new Image(getClass().getResource("Photos/logo.png").toExternalForm()));
 
+        
+        prepareChart();  
+        getChildren().add(imageView);
+        getChildren().add(rectangle);
+        getChildren().add(barChart);
+        getChildren().add(backButtonId);
+        getChildren().add(imageView0);
+
+    }
+    public static void prepareChart()
+    {
+        barChart.setAnimated(false);
+        barChart.getData().clear();
+        System.out.println("prepareChart Called");
         XYChart.Series<String, Number> series1 = new XYChart.Series<>();
         series1.setName("Online");
         series1.getData().add(new XYChart.Data<>("players", PlayersScreenBase.onlineCount));
@@ -95,15 +109,6 @@ public class ServerGraphBase extends AnchorPane {
         XYChart.Series<String, Number> series2 = new XYChart.Series<>();
         series2.setName("offline");
         series2.getData().add(new XYChart.Data<>("players", PlayersScreenBase.offlineCount));
-        
-
         barChart.getData().addAll(series1, series2);
-
-        getChildren().add(imageView);
-        getChildren().add(rectangle);
-        getChildren().add(barChart);
-        getChildren().add(backButtonId);
-        getChildren().add(imageView0);
-
     }
 }

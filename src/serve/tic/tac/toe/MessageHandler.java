@@ -80,6 +80,9 @@ public class MessageHandler extends Thread {
                             clientID = Integer.valueOf(dbResult.split(",")[1]);
                             clientName=dbResult.split(",")[2];
                             Platform.runLater(()->{ PlayersScreenBase.fromOffToOn(clientName);});
+                            PlayersScreenBase.onlineCount++;
+                            PlayersScreenBase.offlineCount--;
+                             Platform.runLater(()->{ ServerGraphBase.prepareChart();});
                             Server.operations.database.changePlayerStatus(clientID, true);
                             if(Server.myClients.size()>1){
                                 for(MessageHandler handler:Server.myClients)
@@ -174,6 +177,9 @@ public class MessageHandler extends Thread {
                         System.err.println("Clint Sends Close");
                         isRunning=false;
                         Platform.runLater(()->{PlayersScreenBase.fromOnToOff(clientName);});
+                        PlayersScreenBase.onlineCount--;
+                            PlayersScreenBase.offlineCount++;
+                        Platform.runLater(()->{ ServerGraphBase.prepareChart();});
                         Server.operations.database.changePlayerStatus(clientID, false);
                         for(MessageHandler handler:Server.myClients)
                             {
@@ -190,6 +196,9 @@ public class MessageHandler extends Thread {
                    }else if(check[0].equals("Clear"))
                    {
                        Platform.runLater(()->{PlayersScreenBase.fromOnToOff(clientName);});
+                       PlayersScreenBase.onlineCount--;
+                            PlayersScreenBase.offlineCount++;
+                       Platform.runLater(()->{ ServerGraphBase.prepareChart();});
                        Server.operations.database.changePlayerStatus(clientID, false);
                        System.err.println("here");
                        System.err.println("There");
