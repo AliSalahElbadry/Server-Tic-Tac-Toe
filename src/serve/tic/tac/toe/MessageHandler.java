@@ -111,7 +111,7 @@ public class MessageHandler extends Thread {
                     }
                     else if (check[0].equals("PGames")) {
                             try{
-                                Server.operations.database.setPGamesWins(2, clientID, Integer.valueOf(check[1]));
+                                Server.operations.database.setPGamesWins(0, clientID, Integer.valueOf(check[1]));
                             }catch(SQLNonTransientConnectionException ex){
                                 System.out.println(ex.getMessage());
                             }
@@ -143,8 +143,7 @@ public class MessageHandler extends Thread {
                                for(MessageHandler h:Server.myClients)
                                {
                                   if(h!=handler&&h!=this){
-                                     h.send.writeUTF("UpdateRemAv,"+handler.clientID+","+handler.clientName);
-                                     h.send.writeUTF("UpdateRemAv,"+clientID+","+clientName);
+                                     h.send.writeUTF("GameRemAv,"+handler.clientID+","+handler.clientName+","+clientID+","+clientName);
                                   }
                                }
                                handler.isPlayingInAGame=true;

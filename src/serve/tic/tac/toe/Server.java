@@ -47,20 +47,20 @@ public class Server extends Thread{
     {
         try 
         {
+           if(!serverSocket.isClosed()&&this.isAlive()){
             PlayersScreenBase.clearOnline();
             Server.myClients.forEach((handler) -> {
                 try {
                     handler.sendMessage("Close,");
                     Server.operations.database.changePlayerStatus(handler.clientID, false);
                     handler.socket.close();
-                } catch (SocketException ex) {
-                    Logger.getLogger(Server.class.getName()).log(Level.SEVERE, null, ex);
-                } catch (IOException ex) {
+                } catch (Exception ex) {
                     Logger.getLogger(Server.class.getName()).log(Level.SEVERE, null, ex);
                 }
             });
             operations.database.close();
             serverSocket.close();
+           }
             operations=null;
             myClients=null;
             this.stop();

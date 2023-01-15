@@ -275,13 +275,15 @@ public class PlayersScreenBase extends AnchorPane {
     }
     public static void clearOnline()//server close
     {
-        for (Object object : onlineListView.getItems()) {
-            
+        onlineListView.getItems().stream().map((object) -> {
             offlineListView.getItems().add(object);
+            return object;
+        }).map((object) -> {
             onlineListView.getItems().remove(object);
+            return object;
+        }).forEachOrdered((_item) -> {
             onlineListView.refresh();
-            
-        }
+        });
     }
    
 }

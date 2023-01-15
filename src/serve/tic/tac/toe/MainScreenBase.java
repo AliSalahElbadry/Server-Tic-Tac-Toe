@@ -96,11 +96,11 @@ public class MainScreenBase extends AnchorPane {
                 startServerButton.setText("Stop Server");
                 
             }else{
+                startServerButton.setText("Start Server");
                 Server.isRunning=false;
-                
+                if(ourServer.isAlive())
                 ourServer.close();
                 
-                startServerButton.setText("Start Server");
                 
             }
         });
