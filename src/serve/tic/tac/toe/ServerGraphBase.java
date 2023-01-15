@@ -1,8 +1,6 @@
 package serve.tic.tac.toe;
 
-import javafx.scene.Node;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
+
 import javafx.scene.chart.BarChart;
 import javafx.scene.chart.CategoryAxis;
 import javafx.scene.chart.NumberAxis;
@@ -11,8 +9,7 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.shape.Rectangle;
-import javafx.scene.text.Text;
-import javafx.stage.Stage;
+
 
 public class ServerGraphBase extends AnchorPane {
 
@@ -79,7 +76,7 @@ public class ServerGraphBase extends AnchorPane {
              ServeTicTacToe.scene.setRoot(new PlayersScreenBase());
 
         });
-        System.out.println(PlayersScreenBase.offlineCount+"    "+PlayersScreenBase.onlineCount);
+        
         imageView0.setFitHeight(113.0);
         imageView0.setFitWidth(357.0);
         imageView0.setLayoutX(220.0);
@@ -99,9 +96,10 @@ public class ServerGraphBase extends AnchorPane {
     }
     public static void prepareChart()
     {
+        if(barChart!=null){
         barChart.setAnimated(false);
         barChart.getData().clear();
-        System.out.println("prepareChart Called");
+        
         XYChart.Series<String, Number> series1 = new XYChart.Series<>();
         series1.setName("Online");
         series1.getData().add(new XYChart.Data<>("players", PlayersScreenBase.onlineCount));
@@ -110,5 +108,7 @@ public class ServerGraphBase extends AnchorPane {
         series2.setName("offline");
         series2.getData().add(new XYChart.Data<>("players", PlayersScreenBase.offlineCount));
         barChart.getData().addAll(series1, series2);
+    
+        }
     }
 }

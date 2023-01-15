@@ -1,6 +1,6 @@
 package serve.tic.tac.toe;
 
-import java.net.URL;
+
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Font;
