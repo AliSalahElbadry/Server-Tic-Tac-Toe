@@ -6,6 +6,7 @@ import java.io.DataOutputStream;
 import java.io.IOException;
 import java.net.Socket;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.sql.SQLNonTransientConnectionException;
 import javafx.application.Platform;
 
@@ -54,20 +55,24 @@ public class MessageHandler extends Thread {
                         }
                     }
                     else if (message.equals("Avaliable")) {
-                        ResultSet resultSet;isInAvilable=true;
-                        resultSet = Server.operations.database.executeSelect("Select * from ROOT.PLAYERS where STATUS = true");
+                         
+                        isInAvilable=true;
+                        if(Server.operations!=null){
+                            if(Server.operations.database!=null){
+                            ResultSet resultSet = Server.operations.database.executeSelect("Select * from ROOT.PLAYERS where STATUS = true");
 
-                        String messageAvaliable = "Avaliable,";
-                        while (resultSet.next()) {
-                            if(resultSet.getInt(1)!=clientID&&!getIsInGameCheck(resultSet.getInt(1)))
-                            messageAvaliable += resultSet.getInt(1) + "," + resultSet.getString(2) + ",";
+                             String messageAvaliable = "Avaliable,";
+                             while (resultSet.next()) {
+                                 if(resultSet.getInt(1)!=clientID&&!getIsInGameCheck(resultSet.getInt(1)))
+                                 messageAvaliable += resultSet.getInt(1) + "," + resultSet.getString(2) + ",";
 
+                             }
+
+                             messageAvaliable = messageAvaliable.substring(0, messageAvaliable.length() - 1);
+                             System.out.println(messageAvaliable);
+                             send.writeUTF(messageAvaliable);
+                            }
                         }
-                        
-                        messageAvaliable = messageAvaliable.substring(0, messageAvaliable.length() - 1);
-                        System.out.println(messageAvaliable);
-                        send.writeUTF(messageAvaliable);
-                        
 
                     }else if(message.equals("closeAv"))
                     {
@@ -87,7 +92,7 @@ public class MessageHandler extends Thread {
                             if(Server.myClients.size()>1){
                                 for(MessageHandler handler:Server.myClients)
                                 {
-                                    if(handler!=this)
+                                    if(handler!=this&&!handler.socket.isClosed())
                                     {
                                         handler.send.writeUTF("UpdateAddAv,"+clientID+","+clientName);
                                     }
@@ -142,7 +147,7 @@ public class MessageHandler extends Thread {
                            if(handler.clientID==Integer.valueOf(check[1])){
                                for(MessageHandler h:Server.myClients)
                                {
-                                  if(h!=handler&&h!=this){
+                                  if(h!=handler&&h!=this&&!h.socket.isClosed()&&!handler.socket.isClosed()){
                                      h.send.writeUTF("GameRemAv,"+handler.clientID+","+handler.clientName+","+clientID+","+clientName);
                                   }
                                }
@@ -182,7 +187,7 @@ public class MessageHandler extends Thread {
                         Server.operations.database.changePlayerStatus(clientID, false);
                         for(MessageHandler handler:Server.myClients)
                             {
-                                if(handler!=this)
+                                if(handler!=this&&!handler.socket.isClosed())
                                 {
                                     handler.send.writeUTF("UpdateRemAv,"+clientID+","+clientName);
                                 }
@@ -203,7 +208,7 @@ public class MessageHandler extends Thread {
                        System.err.println("There");
                       for(MessageHandler handler:Server.myClients)
                             {
-                                if(handler!=this)
+                                if(handler!=this&&!handler.socket.isClosed())
                                 {
                                     handler.send.writeUTF("UpdateRemAv,"+clientID+","+clientName);
                                 }
@@ -217,7 +222,7 @@ public class MessageHandler extends Thread {
                        isPlayingInAGame=false;
                        for(MessageHandler handler:Server.myClients)
                         {
-                            if(handler!=this)
+                            if(handler!=this&&!handler.socket.isClosed())
                             {
                                 handler.send.writeUTF("UpdateAddAv,"+clientID+","+clientName);
                             }
@@ -232,9 +237,9 @@ public class MessageHandler extends Thread {
             }
            
         }
-        catch (Exception e) {
-            
-            System.out.println(e.getCause());
+        catch (IOException | NumberFormatException | SQLException e) {
+            System.out.print(e.getMessage());
+           
         }
         
         
