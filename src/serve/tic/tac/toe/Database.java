@@ -69,12 +69,14 @@ public class Database {
                 DriverManager.registerDriver(new ClientDriver());
                 con=DriverManager.getConnection("jdbc:derby://localhost:1527/Tic-Tac-Toe", "root","root");
             }
-            statement=con.prepareStatement("insert into ROOT.PLAYERS (PLAYER_ID,USER_NAME,EMAIL,PASSWORD,STATUS) values (?,?,?,?,?)");
+            statement=con.prepareStatement("insert into ROOT.PLAYERS (PLAYER_ID,USER_NAME,EMAIL,PASSWORD,STATUS,WINs,COUNTGAMES) values (?,?,?,?,?,?,?)");
             statement.setInt(1,playerId);
             statement.setString(2, username);
             statement.setString(3, email);
             statement.setString(4, password);
             statement.setBoolean(5, false);
+            statement.setInt(6, 0);
+            statement.setInt(7, 0);
             res=statement.executeUpdate();
             
         } catch (SQLException ex) {
